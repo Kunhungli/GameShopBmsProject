@@ -47,8 +47,8 @@
 <script type="text/javascript">
 	function uplClick(n){
 		$("#uplDiv").toggle()
-//  		$("#uplmain").load("product.upl/" + n)
-		location.href = "product.upl/" + n;
+ 		$("#uplmain").load("product.upl/" + n)
+// 		location.href = "product.upl/" + n;
 	}
 	function delClick(n){
 		if (confirm("Are you sure Delete pId=" + n + " data?")) {

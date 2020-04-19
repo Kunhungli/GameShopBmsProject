@@ -24,7 +24,7 @@
 			<section id="section">
 		</c:otherwise>
 	</c:choose>
-	<form action="../${controllerUrl}" method="post" enctype="multipart/form-data">
+	<form action="${controllerUrl}" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="id" value="${product.productId}">
 	<table>
 	<!-- 	test id -->
@@ -46,7 +46,7 @@
 			<td>file
 			<td>
 				<c:choose>
-					<c:when test="${product!=null}"><img id="Preview" src="../productImageView/${product.productId}"></c:when>
+					<c:when test="${product!=null}"><img id="Preview" src="productImageView/${product.productId}"></c:when>
 					<c:otherwise><img id="Preview" src="defaultImg.jpg"></c:otherwise>
 				</c:choose>
 	<!-- 			<img id="Preview"> -->
