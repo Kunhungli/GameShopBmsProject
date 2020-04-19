@@ -41,7 +41,7 @@ public class BmsController {
 		this.productDao = pDao;
 	}
 	
-	@RequestMapping(path = "/", method = RequestMethod.GET)
+	@RequestMapping(path = {"/", "index"}, method = RequestMethod.GET)
 	public String GoBmsHomePage() {
 		return "BmsHome";
 	}

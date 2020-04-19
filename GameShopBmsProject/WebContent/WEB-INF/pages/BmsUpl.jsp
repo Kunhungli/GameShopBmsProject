@@ -1,30 +1,20 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<c:if test="${product==null}">
-	<link rel="stylesheet" type="text/css" href="css/Bms.css">
-</c:if>
-<script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
-<title>Insert title here</title>
-</head>
-<body>
+
 <c:if test="${product==null}">
 	<jsp:include page="BmsMenuPage.jsp"></jsp:include>
 </c:if>
 	<c:choose>
 		<c:when test="${product!=null}">
 			<c:set var="controllerUrl" value="product.upldata"/>
-			<section>
+			<div>
 		</c:when>
 		<c:otherwise>
 			<c:set var="controllerUrl" value="product.new"/>
-			<section id="section">
+			<div id="section">
 		</c:otherwise>
 	</c:choose>
-	<form action="../${controllerUrl}" method="post" enctype="multipart/form-data">
+	<form action="${controllerUrl}" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="id" value="${product.productId}">
 	<table>
 	<!-- 	test id -->
@@ -46,7 +36,7 @@
 			<td>file
 			<td>
 				<c:choose>
-					<c:when test="${product!=null}"><img id="Preview" src="../productImageView/${product.productId}"></c:when>
+					<c:when test="${product!=null}"><img id="Preview" src="productImageView/${product.productId}"></c:when>
 					<c:otherwise><img id="Preview" src="defaultImg.jpg"></c:otherwise>
 				</c:choose>
 	<!-- 			<img id="Preview"> -->
@@ -61,7 +51,7 @@
 		    <td colspan="2"><input type="submit" value="Upload"> Press here to upload the file!	
 	</table> 
 	</form>
-</section>
+</div>
 <script type="text/javascript">
 	$('#file').change(function() {
 		var file = $('#file')[0].files[0];
@@ -75,5 +65,3 @@
 		$("#file").click();
 	});
 </script>
-</body>
-</html>

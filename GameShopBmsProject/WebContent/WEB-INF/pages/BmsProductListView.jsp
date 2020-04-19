@@ -47,29 +47,30 @@
 <script type="text/javascript">
 	function uplClick(n){
 		$("#uplDiv").toggle()
- 		$("#uplmain").load("product.upl/" + n)
+//  		$("#uplmain").load("product.upl/" + n)
+		location.href = "product.upl/" + n;
 	}
 	function delClick(n){
 		if (confirm("Are you sure Delete pId=" + n + " data?")) {
 			txt = "You pressed OK!";
 			//TODO redrict del page
  			document.location = 'product.del/' + n;
-// 			$.ajax({
-// 				method: "GET",
-// 				url: 'product.del/' + n,
+			$.ajax({
+				method: "GET",
+				url: 'product.del/' + n,
 // // 				data: { name: "John", location: "Boston" }
-// 			})
-// 			.done(function( data ) {
-// 				if(data){
-// 					alert( "Delete id=" + n + " is success." );
-// 				}
-// 			})
+			})
+			.done(function( data ) {
+				if(data){
+					alert( "Delete id=" + n + " is success." );
+				}
+			})
 // 			.fail(function() {
 // 				alert( "Delete is fail." );
 // 			})
-// 			.always({
-// // 				location.href = "/";
-// 			})
+			.always({
+// 				location.href = "index/";
+			});
 		} else {
 			txt = "You pressed Cancel!";
 		}
