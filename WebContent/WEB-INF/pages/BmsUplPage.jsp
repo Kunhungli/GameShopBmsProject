@@ -3,6 +3,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+<c:if test="${message.length()>0}">
+	<script type="text/javascript">alert("Message:" + message)</script>
+</c:if>
 <meta charset="UTF-8">
 <c:if test="${product==null}">
 	<link rel="stylesheet" type="text/css" href="css/Bms.css">
@@ -16,11 +19,11 @@
 </c:if>
 	<c:choose>
 		<c:when test="${product!=null}">
-			<c:set var="controllerUrl" value="product.upldata"/>
+			<c:set var="controllerUrl" value="productBean"/>
 			<section>
 		</c:when>
 		<c:otherwise>
-			<c:set var="controllerUrl" value="product.new"/>
+			<c:set var="controllerUrl" value="productBean"/>
 			<section id="section">
 		</c:otherwise>
 	</c:choose>
@@ -58,7 +61,7 @@
 			<td>dwlTime
 			<td><input type="text" name="dwlTime" value="${product.downloadTime}">
 		<tr>
-		    <td colspan="2"><input type="submit" value="Upload"> Press here to upload the file!	
+		    <td colspan="2"><input id="upl_btn" type="submit" value="Upload"> Press here to upload the file!	
 	</table> 
 	</form>
 </section>

@@ -5,10 +5,11 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ProcessBuilder.Redirect;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -55,7 +56,7 @@ public class BmsController {
 	/* Call Url path:'/product.all'
 	 * return > direct: ProductView.jsp
 	 */
-	@RequestMapping(path = "/product.all", method = RequestMethod.GET)
+	@RequestMapping(path = "/productlist", method = RequestMethod.GET)
 	public String SelectProductAll(ModelMap model) throws SQLException {
 		List<Product> list = productDao.queryAll();
 		model.addAttribute("productlist",list);
@@ -66,9 +67,8 @@ public class BmsController {
 	 * return: Json ( List<Product> )
 	 */
 	@ResponseBody
-	@RequestMapping(path = "/product.all/json", method = RequestMethod.GET)
+	@RequestMapping(path = "/productJsonView", method = RequestMethod.GET)
 	public List<Product> SelectProductAllJson() throws SQLException {
-		
 		return productDao.queryAll();
 	}
 	
@@ -125,34 +125,34 @@ public class BmsController {
 		return null;
 	}
 	
-	@RequestMapping(path = "/product.new", method = RequestMethod.POST)
-	public String NewProductItem(	@RequestParam("pName") String pName,
-									@RequestParam("price") int price,
-									@RequestParam("intro") String intro,
-									@RequestParam("tag") String tag,
-									@RequestParam("file") MultipartFile mf,
-									@RequestParam("uplTime") Date uplTime,
-									@RequestParam("dwlTime") Date dwlTime ){
-		Product p = new Product( pName, price, intro, tag, uplTime, dwlTime);
-		
-		if( !mf.isEmpty() ) {
-			try {
-				p.setProductImage(mf.getBytes());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		productDao.insertProduct(p);
-		
-		return "redirect:/product.newPage";
-	}
+//	@RequestMapping(path = "/product.new", method = RequestMethod.POST)
+//	public String NewProductItem(	@RequestParam("pName") String pName,
+//									@RequestParam("price") int price,
+//									@RequestParam("intro") String intro,
+//									@RequestParam("tag") String tag,
+//									@RequestParam("file") MultipartFile mf,
+//									@RequestParam("uplTime") Date uplTime,
+//									@RequestParam("dwlTime") Date dwlTime ){
+//		Product p = new Product( pName, price, intro, tag, uplTime, dwlTime);
+//		
+//		if( !mf.isEmpty() ) {
+//			try {
+//				p.setProductImage(mf.getBytes());
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
+//		productDao.insertProduct(p);
+//		
+//		return "redirect:/product.newPage";
+//	}
 	
 
-	@RequestMapping(path = "/product.upldata", method = RequestMethod.POST)
+	@RequestMapping(path = "/productBean", method = RequestMethod.POST)
 	public String UpdateProductItem(	@RequestParam("id") String id,
 										@RequestParam("pName") String pName,
-										@RequestParam("price") int price,
+		Model model,					@RequestParam("price") int price,
 										@RequestParam("intro") String intro,
 										@RequestParam("tag") String tag,
 										@RequestParam("file") MultipartFile mf,
@@ -169,17 +169,31 @@ public class BmsController {
 			}
 		}
 		
-		productDao.updateById(Integer.parseInt(id), p);
+		String msg = "";
 		
-		return "redirect:/";
+		if(id!=null && id.length()>0) {
+			try {
+				productDao.updateById(Integer.parseInt(id), p);
+				msg = "You has update id=" + id + " data.";
+			} catch(NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}else {
+			productDao.insertProduct(p);
+			msg = "You has insert a record.";
+		}
+		model.addAttribute("message", msg);
+		return "redirect:/productlist";
 	}
 	
 	@RequestMapping(path = "/product.del/{id}", method = RequestMethod.GET)
-	public String DelProductItem( @PathVariable("id") String id ){
-		
-		productDao.deleteById(Integer.parseInt(id));
-		
-		return "redirect:/product.all";
+	public String DelProductItem( @PathVariable("id") String id, Model model ){
+		if(productDao.deleteById(Integer.parseInt(id))) {
+			Map<String, String> msg = new HashMap<String, String>();
+			msg.put("message", "You has Delete id=" + id + " data");
+			model.addAttribute("message", msg);
+		}
+		return "redirect:/productlist";
 	}
 	
 }

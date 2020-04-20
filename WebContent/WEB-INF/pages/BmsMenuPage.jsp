@@ -10,7 +10,7 @@
 <aside id="aside">
 	<h1>ASIDE 側邊</h1>
 	<h2>
-		<a href="product.all">Click this load update Page</a>
+		<a href="productlist">Click this load update Page</a>
 	</h2>
 	<br />
 	<h2>

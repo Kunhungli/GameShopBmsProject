@@ -1,6 +1,5 @@
 package tw.bms.gameshop.model;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
