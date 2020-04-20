@@ -13,29 +13,19 @@ import javax.persistence.Table;
 import org.springframework.stereotype.Component;
 
 @Entity
-@Table(name = "orderDetail")
+@Table(name="OrderDetail")
 @Component
 public class OrderDetail {
-	@Id @Column(name = "detailId")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer detailId;
-	
-	@Column(name = "productId")
 	private Integer productId;
-	
-	@Column(name = "price")
 	private Integer price;
-	
-	@Column(name = "amount")
-	private Integer amount;
-	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "orderId")
 	private Orders orders;
 
 	public OrderDetail() {
 	}
-
+	
+	@Id @Column(name="detailId")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getDetailId() {
 		return detailId;
 	}
@@ -44,6 +34,7 @@ public class OrderDetail {
 		this.detailId = detailId;
 	}
 
+	@Column(name="productId")
 	public Integer getProductId() {
 		return productId;
 	}
@@ -52,6 +43,7 @@ public class OrderDetail {
 		this.productId = productId;
 	}
 
+	@Column(name="price")
 	public Integer getPrice() {
 		return price;
 	}
@@ -60,14 +52,8 @@ public class OrderDetail {
 		this.price = price;
 	}
 
-	public Integer getAmount() {
-		return amount;
-	}
-
-	public void setAmount(Integer amount) {
-		this.amount = amount;
-	}
-
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="orderId")
 	public Orders getOrders() {
 		return orders;
 	}

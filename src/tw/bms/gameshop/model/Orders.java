@@ -20,26 +20,18 @@ import org.springframework.stereotype.Component;
 @Table(name="Orders")
 @Component
 public class Orders {
-
-	@Id @Column(name="orderId")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer orderId;
-	
-	@Column(name="userId")
 	private Integer userId;
-	
-	@Column(name="buyDatetime")
 	private Date buyDatetime;
-	
-	@Column(name="purchase")
 	private Integer purchase;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "orders", cascade = CascadeType.ALL)
+	private String hash;
 	private Set<OrderDetail> orderDetails = new HashSet<OrderDetail>(0);
 
 	public Orders() {
 	}
-	
+
+	@Id @Column(name="orderId")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Integer getOrderId() {
 		return orderId;
 	}
@@ -48,6 +40,7 @@ public class Orders {
 		this.orderId = orderId;
 	}
 	
+	@Column(name="userId")
 	public Integer getUserId() {
 		return userId;
 	}
@@ -56,6 +49,7 @@ public class Orders {
 		this.userId = userId;
 	}
 
+	@Column(name="buyDatetime")
 	public Date getBuyDatetime() {
 		return buyDatetime;
 	}
@@ -64,6 +58,7 @@ public class Orders {
 		this.buyDatetime = buyDatetime;
 	}
 
+	@Column(name="purchase")
 	public Integer getPurchase() {
 		return purchase;
 	}
@@ -72,6 +67,16 @@ public class Orders {
 		this.purchase = purchase;
 	}
 
+	@Column(name="hash")
+	public String getHash() {
+		return hash;
+	}
+
+	public void setHash(String hash) {
+		this.hash = hash;
+	}
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "orders", cascade = CascadeType.ALL)
 	public Set<OrderDetail> getOrderDetails() {
 		return orderDetails;
 	}

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -23,22 +24,43 @@ public class ProductDAO {
 		this.sessionFactory = sessionFactory;
 	}
 
-	public List<Product> SelectAll() throws SQLException {
+	public List<Product> queryAll() {
 		return sessionFactory.getCurrentSession().createQuery("From Product", Product.class).list();
 	}
 	
-	public Product InsertProduct(Product p) {
+	public Product queryByName(String gameName) { 	// 以遊戲名稱找遊戲資料頁面
+
+		try {
+			Query<Product> query = sessionFactory.getCurrentSession().createQuery("from Product where productName =?0", Product.class).setParameter(0, gameName);
+
+			List<Product> list = query.list();
+
+			if (gameName.equalsIgnoreCase(list.get(0).getProductName())) {
+				return list.get(0);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public Product queryById(int id) {
+		return sessionFactory.getCurrentSession().get(Product.class, id);
+	}
+	
+	public Product insertProduct(Product p) {
 		if(p != null) {
 			sessionFactory.getCurrentSession().save(p);
 		}
 		return p;
 	}
 	
-	public boolean update(int id, Product p) {
+	public boolean updateById(int id, Product p) {
 		Product myBean = sessionFactory.getCurrentSession().get(Product.class, id);
 		if(myBean!=null) {
 			myBean.setProductName(p.getProductName());
 			myBean.setTag(p.getTag());
+			myBean.setIntro(p.getIntro());
 			myBean.setPrice(p.getPrice());
 			if(p.getProductImage()!=null) {
 				myBean.setProductImage(p.getProductImage());
@@ -50,11 +72,7 @@ public class ProductDAO {
 		return false;
 	}
 
-	public Product SelectById(int id) {
-		return sessionFactory.getCurrentSession().get(Product.class, id);
-	}
-
-	public boolean DeleteById(int id) {
+	public boolean deleteById(int id) {
 		Product myBean = sessionFactory.getCurrentSession().get(Product.class, id);
 		if( myBean!=null ) {
 			sessionFactory.getCurrentSession().delete(myBean);

@@ -5,6 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ProcessBuilder.Redirect;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
@@ -56,7 +57,7 @@ public class BmsController {
 	 */
 	@RequestMapping(path = "/product.all", method = RequestMethod.GET)
 	public String SelectProductAll(ModelMap model) throws SQLException {
-		List<Product> list = productDao.SelectAll();
+		List<Product> list = productDao.queryAll();
 		model.addAttribute("productlist",list);
 		return "BmsProductListView";
 	}
@@ -68,14 +69,14 @@ public class BmsController {
 	@RequestMapping(path = "/product.all/json", method = RequestMethod.GET)
 	public List<Product> SelectProductAllJson() throws SQLException {
 		
-		return productDao.SelectAll();
+		return productDao.queryAll();
 	}
 	
 	@RequestMapping(path = "/productImageCreate/{id}", method = RequestMethod.GET)
 	public void ImageProcess( @PathVariable("id")int id ) throws IOException, SQLException {
 		//TODO transformat byte[] to ImageSource  
 		
-		byte[] image = productDao.SelectById(id).getProductImage();
+		byte[] image = productDao.queryById(id).getProductImage();
 		
 		if( image != null ) {
 			ByteArrayInputStream bis = new ByteArrayInputStream(image);
@@ -89,7 +90,7 @@ public class BmsController {
 	@RequestMapping(path = "/productImageView/{id}", method = RequestMethod.GET)
 	public void ImageView( @PathVariable("id")String rsqId, HttpServletResponse response, Model model) throws IOException {
         int id = Integer.parseInt(rsqId);
-        Product myProduct = productDao.SelectById(id);
+        Product myProduct = productDao.queryById(id);
         response.setContentType("image/png");
         ServletOutputStream os = response.getOutputStream();
         byte[] image = myProduct.getProductImage();
@@ -110,9 +111,18 @@ public class BmsController {
 	@RequestMapping(path = "/product.upl/{id}", method = RequestMethod.GET)
 	public String uploadById(@PathVariable("id") String id, Model model) {
 		if( id != null ) {
-			model.addAttribute("product",productDao.SelectById(Integer.parseInt(id)));
+			model.addAttribute("product",productDao.queryById(Integer.parseInt(id)));
 		}
 		return "BmsUplPage";
+	}
+	
+	@ResponseBody
+	@RequestMapping(path = "/json.product.view/{id}", method = RequestMethod.GET)
+	public Product jsonProductViewById(@PathVariable("id") String id, Model model) {
+		if( id != null ) {
+			return productDao.queryById(Integer.parseInt(id));
+		}
+		return null;
 	}
 	
 	@RequestMapping(path = "/product.new", method = RequestMethod.POST)
@@ -133,9 +143,9 @@ public class BmsController {
 				e.printStackTrace();
 			}
 		}
-		productDao.InsertProduct(p);
+		productDao.insertProduct(p);
 		
-		return "BmsHomePage";
+		return "redirect:/product.newPage";
 	}
 	
 
@@ -159,17 +169,17 @@ public class BmsController {
 			}
 		}
 		
-		productDao.update(Integer.parseInt(id), p);
+		productDao.updateById(Integer.parseInt(id), p);
 		
-		return "BmsHomePage";
+		return "redirect:/";
 	}
 	
 	@RequestMapping(path = "/product.del/{id}", method = RequestMethod.GET)
 	public String DelProductItem( @PathVariable("id") String id ){
 		
-		productDao.DeleteById(Integer.parseInt(id));
+		productDao.deleteById(Integer.parseInt(id));
 		
-		return "BmsHomePage";
+		return "redirect:/product.all";
 	}
 	
 }
